@@ -1,1 +1,12 @@
+## dax queries 
+# create new column age group 
+age_group = SWITCH(
+    TRUE(),
+     'public cust_details'[customer_age] < 30, "20-30",
+      'public cust_details'[customer_age] >=30 && 'public cust_details'[customer_age] < 40, "30-40",
+      'public cust_details'[customer_age] >=40 && 'public cust_details'[customer_age] < 50, "40-50",
+      'public cust_details'[customer_age] >=50 && 'public cust_details'[customer_age] < 60, "50-60",
+      'public cust_details'[customer_age] >= 60, "60+",
+      "unknown“
+)
 
