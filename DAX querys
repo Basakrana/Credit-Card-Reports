@@ -1,5 +1,7 @@
-## dax queries 
-# create new column age group 
+---dax queries 
+
+---create new column for difrentiate diffrente age in age groups.
+
 age_group = SWITCH(
     TRUE(),
      'public cust_details'[customer_age] < 30, "20-30",
@@ -10,3 +12,36 @@ age_group = SWITCH(
       "unknown“
 )
 
+--- Create a New column for diffrent incomes in a income group.
+
+income_group = SWITCH(
+    TRUE(),
+     'public cust_details'[income] < 35000,"low",
+     'public cust_details'[income] >= 35000 && 'public cust_details'[income] < 70000, "med",
+     'public cust_details'[income] >= 70000,"high",
+     "unknown"
+)
+
+--- Create new column to Extract week numbers from week start date 
+
+week_num2 = WEEKNUM('public cc_detail'[week_start_date].[Date])
+
+--- Create new column to calculate revenue 
+
+revenue = 'public cc_detail'[annual_fees] + 'public cc_detail'[total_trans_amt] + 'public cc_detail'[interest_earned]
+
+--- Create a New column to calculate Current Week Revenue 
+
+current_week_revenue = CALCULATE(
+    SUM('public cc_detail'[revenue]),
+    FILTER(
+        ALL('public cc_detail'),
+        'public cc_detail'[week_num2] = MAX('public cc_detail'[week_num2])))
+
+--- Create a new column to calculate previoud week revenue to compare with current week revenue
+
+Pre_week_revenue = CALCULATE(
+    SUM('public cc_detail'[revenue]),
+    FILTER(
+        ALL('public cc_detail'),
+        'public cc_detail'[week_num2] = MAX('public cc_detail'[week_num2])-1))
